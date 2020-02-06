@@ -1,0 +1,208 @@
+<!-- saved from url=(0057)file:///C:/Users/gaoly/Downloads/1-160512205Q8/index.html -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <title>老高聊天室</title>
+  <style>
+      *, *:before, *:after {
+          box-sizing: border-box;
+      }
+      body, html {
+          height: 100%;
+          overflow: hidden;
+      }
+      body, ul {
+          margin: 0;
+          padding: 0;
+      }
+      body {
+          color: #4d4d4d;
+          font: 14px/1.4em 'Helvetica Neue', Helvetica, 'Microsoft Yahei', Arial, sans-serif;
+          background: #f5f5f5  no-repeat center;
+          background-size: cover;
+      }
+      ul {
+          list-style: none;
+      }
+      #chat {
+          margin: 20px auto;
+          width: 800px;
+          height: 600px;
+      }
+      .send {
+        padding: 6px 20px;
+        background-color: #ccc;
+        z-index: 2;
+        position: absolute;
+        right:0;
+        bottom: 0;
+        cursor: pointer;
+      }
+      .send:hover {
+        color:#fff;
+        background-color: hsla(110, 84%, 47%, 0.842);
+      }
+      .main {
+        position: relative;
+      }
+      .right {
+        display: flex;
+        flex-direction: row-reverse;
+      }
+      .right text {
+        margin-left: 15px;
+      }
+  </style>
+<style type="text/css">
+#chat{overflow:hidden;border-radius:3px}
+#chat .main,#chat .sidebar{height:100%}#chat .sidebar{float:left;width:200px;color:#f4f4f4;background-color:#2e3238}#chat .main{position:relative;overflow:hidden;background-color:#eee}#chat .m-text{position:absolute;width:100%;bottom:0;left:0}#chat .m-message{height:calc(100% - 10pc)}</style><style type="text/css">.m-card{padding:9pt;border-bottom:1px solid #24272c}.m-card footer{margin-top:10px}.m-card .avatar,.m-card .name{vertical-align:middle}.m-card .avatar{border-radius:2px}.m-card .name{display:inline-block;margin:0 0 0 15px;font-size:1pc}.m-card .search{padding:0 10px;width:100%;font-size:9pt;color:#fff;height:30px;line-height:30px;border:1px solid #3a3a3a;border-radius:4px;outline:0;background-color:#26292e}</style><style type="text/css">.m-list li{padding:9pt 15px;border-bottom:1px solid #292c33;cursor:pointer;-webkit-transition:background-color .1s;transition:background-color .1s}.m-list li:hover{background-color:hsla(0,0%,100%,.03)}.m-list li.active{background-color:hsla(0,0%,100%,.1)}.m-list .avatar,.m-list .name{vertical-align:middle}.m-list .avatar{border-radius:2px}.m-list .name{display:inline-block;margin:0 0 0 15px}</style><style type="text/css">.m-text{height:10pc;border-top:1px solid #ddd}.m-text textarea{padding:10px;height:100%;width:100%;border:none;outline:0;font-family:Micrsofot Yahei;resize:none}</style><style type="text/css">.m-message{padding:10px 15px;overflow-y:scroll}.m-message li{margin-bottom:15px}.m-message .time{margin:7px 0;text-align:center}.m-message .time>span{display:inline-block;padding:0 18px;font-size:9pt;color:#fff;border-radius:2px;background-color:#dcdcdc}.m-message .avatar{float:left;margin:0 10px 0 0;border-radius:3px}.m-message .text{display:inline-block;position:relative;padding:0 10px;max-width:calc(100% - 40px);min-height:30px;line-height:2.5;font-size:9pt;text-align:left;word-break:break-all;background-color:#fafafa;border-radius:4px}.m-message .text:before{content:" ";position:absolute;top:9px;right:100%;border:6px solid transparent;border-right-color:#fafafa}.m-message .self{text-align:right}.m-message .self .avatar{float:right;margin:0 0 0 10px}.m-message .self .text{background-color:#b2e281}.m-message .self .text:before{right:inherit;left:100%;border-right-color:transparent;border-left-color:#b2e281}</style></head>
+<body>
+  <div id="chat">
+    <div class="sidebar">
+      <div class="m-card">
+        <header>
+          <img id="myHead" class="avatar" width="40" height="40" alt="Coffce"  />
+          <p id="myName" class="name">Coffce</p>
+        </header>
+        <footer>
+          <input class="search" placeholder="search user..." />
+        </footer>
+      </div><!--v-component-->
+      <div class="m-list">
+        <ul id="users">
+
+        </ul>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="m-message">
+        <ul >
+           <li id="msgs">
+             <div id="main" class='main'>
+
+             </div>
+           </li>
+        </ul>
+      </div>
+      <div class="m-text">
+        <textarea id="myContent" placeholder="按 Ctrl + Enter 发送"></textarea>
+      </div>
+      <span class='send'>发送</span>
+    </div>
+  </div>
+    <!-- SocketIO 提供了一个客户端实现：socket.io.js -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var user // 用户信息
+      var socket = null // socket对象
+      var peoples = [] // 当前用户
+      var currentPeople = null // 当前聊天用户
+        $(function(){
+           //  获取用户信息
+           $.ajax({ 
+             url: '/getUserInfo',
+             success:function(data){
+               if(!data.user){
+                 window.location.href = '/login.html'
+                return
+
+               }
+               user = data.user // 赋值用户信息
+               connectSocket() // 连接socket
+               updateChat()
+             }
+           })
+        })
+        $(".send").click(function(){
+          var content =  $("#myContent").val().trim()
+          if(currentPeople && content) {
+            //  当有了内容和发送对象才发型消息
+            let p =  peoples.find(function(item){ return item.account == currentPeople.account })
+            p.messages = p.messages || []
+            var message = { account: user.account, head: user.head,msg: content }
+            p.messages.push(message) // 将信息添加到信息池里面
+            socket.emit("message-private", currentPeople.account , message) // 给某人发送消息
+            $("#myContent").val("")
+            updateChat()
+          }
+        })
+        $(document).on('click','#users li', function(){
+             currentPeople = peoples.find(item => item.account == $(this)[0].dataset.account) 
+             updateChat()  
+        })
+        // 连接socket
+        var connectSocket = function () {
+          socket =  io('http://localhost:3000?account='+user.account) // 创建连接 创建连接时 传入socket信息
+          socket.on('connect', function(){
+            console.log('连接建立成功')
+          })
+          // 有人进来 通知
+          socket.on('peopleIn', function(people){
+            console.log('有人进来了' +JSON.stringify(people) )
+            peoples.push(people)
+            updateChat()
+          })
+          socket.on("allpeople", function(allpeoples){
+            console.log("同步消息" + JSON.stringify(allpeoples) )
+            peoples = allpeoples
+            updateChat()
+          })
+          // 有人离开通知
+          socket.on('peopleOut', function(account){
+            console.log('有人离开了' + account)
+            updateChat()
+            peoples = peoples.filter(function(item){
+              return item.account != account
+            })
+          })
+          socket.on('message-private', function (account, message) {
+            console.log('有人给我发消息' + JSON.stringify(message))
+           let p =  peoples.find(function(item){ return item.account == message.account })
+           currentPeople = p 
+           p.messages = p.messages || []
+           p.messages.push(message) // 将信息添加到信息池里面
+           updateChat()
+
+          })
+          //  更新聊天区
+         
+        }
+        var updateChat = function () {
+          $("#myName").text(user.name)
+         $("#myHead").attr('src', user.head)
+         var otherPeoples = peoples.filter(item => item.account != user.account)
+
+           currentPeople = currentPeople ? currentPeople : otherPeoples && otherPeoples.length ? otherPeoples[0]: null
+           var userList = otherPeoples.map(function(people){
+               return `
+                   <li  class="${currentPeople.account == people.account ? 'active' : ''}" data-account="${people.account}">
+                     <img class="avatar" width="30" height="30" alt="${people.name}" src="${people.head}" />
+                     <p class="name" >${people.name}</p>
+                     </li>
+               `
+             })
+             var messages = currentPeople ? peoples.find(function(item){ return item.account == currentPeople.account }).messages : []
+             messages = messages || []
+             var msgList =  messages.map(function(message){
+               return `
+                 <div style="margin:30px 0" class="${message.account === user.account ? 'right' : 'left'}">
+                  <img class="avatar" width="30" height="30" src="${ message.head }" />
+                 <div class="text">
+                   ${message.msg}                  
+                </div>
+              </div>
+
+               `
+             })
+             $('#main').html(msgList.join(""))
+             $('#users').html(userList.join(""))
+            
+         } 
+    </script>
+</body>
+</html>
