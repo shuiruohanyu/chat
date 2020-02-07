@@ -58,7 +58,53 @@
   </style>
 <style type="text/css">
 #chat{overflow:hidden;border-radius:3px}
-#chat .main,#chat .sidebar{height:100%}#chat .sidebar{float:left;width:200px;color:#f4f4f4;background-color:#2e3238}#chat .main{position:relative;overflow:hidden;background-color:#eee}#chat .m-text{position:absolute;width:100%;bottom:0;left:0}#chat .m-message{height:calc(100% - 10pc)}</style><style type="text/css">.m-card{padding:9pt;border-bottom:1px solid #24272c}.m-card footer{margin-top:10px}.m-card .avatar,.m-card .name{vertical-align:middle}.m-card .avatar{border-radius:2px}.m-card .name{display:inline-block;margin:0 0 0 15px;font-size:1pc}.m-card .search{padding:0 10px;width:100%;font-size:9pt;color:#fff;height:30px;line-height:30px;border:1px solid #3a3a3a;border-radius:4px;outline:0;background-color:#26292e}</style><style type="text/css">.m-list li{padding:9pt 15px;border-bottom:1px solid #292c33;cursor:pointer;-webkit-transition:background-color .1s;transition:background-color .1s}.m-list li:hover{background-color:hsla(0,0%,100%,.03)}.m-list li.active{background-color:hsla(0,0%,100%,.1)}.m-list .avatar,.m-list .name{vertical-align:middle}.m-list .avatar{border-radius:2px}.m-list .name{display:inline-block;margin:0 0 0 15px}</style><style type="text/css">.m-text{height:10pc;border-top:1px solid #ddd}.m-text textarea{padding:10px;height:100%;width:100%;border:none;outline:0;font-family:Micrsofot Yahei;resize:none}</style><style type="text/css">.m-message{padding:10px 15px;overflow-y:scroll}.m-message li{margin-bottom:15px}.m-message .time{margin:7px 0;text-align:center}.m-message .time>span{display:inline-block;padding:0 18px;font-size:9pt;color:#fff;border-radius:2px;background-color:#dcdcdc}.m-message .avatar{float:left;margin:0 10px 0 0;border-radius:3px}.m-message .text{display:inline-block;position:relative;padding:0 10px;max-width:calc(100% - 40px);min-height:30px;line-height:2.5;font-size:9pt;text-align:left;word-break:break-all;background-color:#fafafa;border-radius:4px}.m-message .text:before{content:" ";position:absolute;top:9px;right:100%;border:6px solid transparent;border-right-color:#fafafa}.m-message .self{text-align:right}.m-message .self .avatar{float:right;margin:0 0 0 10px}.m-message .self .text{background-color:#b2e281}.m-message .self .text:before{right:inherit;left:100%;border-right-color:transparent;border-left-color:#b2e281}</style></head>
+#chat .main,#chat .sidebar{height:100%}
+#chat .sidebar
+{
+  float:left;width:200px;color:#f4f4f4;background-color:#2e3238}
+  #chat .main{position:relative;overflow-y:auto;background-color:#eee}
+  #chat .m-text{position:absolute;width:100%;bottom:0;left:0}
+  #chat .m-message{height:calc(100% - 10pc)
+  }
+  </style>
+  <style type="text/css">
+  .m-card{padding:9pt;border-bottom:1px solid #24272c}
+  .m-card footer{margin-top:10px}.m-card .avatar,
+  .m-card .name{vertical-align:middle}
+  .m-card .avatar{border-radius:2px}
+  .m-card .name{display:inline-block;margin:0 0 0 15px;font-size:1pc}
+  .m-card .search{padding:0 10px;width:100%;font-size:9pt;color:#fff;height:30px;line-height:30px;border:1px solid #3a3a3a;border-radius:4px;outline:0;background-color:#26292e}</style>
+  <style type="text/css">
+  .m-list li{padding:9pt 15px;border-bottom:1px solid #292c33;cursor:pointer;-webkit-transition:background-color .1s;transition:background-color .1s}
+  .m-list li:hover{background-color:hsla(0,0%,100%,.03)}.m-list li.active{background-color:hsla(0,0%,100%,.1)}
+  .m-list .avatar,.m-list .name{vertical-align:middle}
+  .m-list .avatar{border-radius:2px;}
+  .m-list .name{display:inline-block;margin:0 0 0 15px}
+  </style>
+  <style type="text/css">
+  .m-text{height:10pc;border-top:1px solid #ddd}
+  .m-text textarea{padding:10px;height:100%;width:100%;border:none;outline:0;font-family:Micrsofot Yahei;resize:none}</style><style type="text/css">
+  .m-message{padding:10px 15px;overflow:hidden}
+  .m-message li{margin-bottom:15px}
+  .m-message .time{margin:7px 0;text-align:center}
+  .m-message .time>span{display:inline-block;padding:0 18px;font-size:9pt;color:#fff;border-radius:2px;background-color:#dcdcdc}
+  .m-message .avatar{float:left;margin:0 10px 0 0;border-radius:3px}
+  .m-message .text{display:inline-block;position:relative;padding:0 10px;max-width:calc(100% - 40px);min-height:30px;line-height:2.5;font-size:9pt;text-align:left;word-break:break-all;background-color:#fafafa;border-radius:4px}
+  .m-message .left .text:before{content:" ";position:absolute;top:9px;right:100%;border:6px solid transparent;border-right-color:#fafafa}
+  .m-message .self{text-align:right}
+  .m-message .self .avatar{float:right;margin:0 0 0 10px}
+  .m-message .self .text{background-color:#52CC33}
+  .m-message .self .text:before {right:inherit;left:100%;border-right-color:transparent;border-left-color:#b2e281}
+  /* .m-message .right .text:after{content:" ";position:absolute;top:9px;
+  left:100%;border:6px solid transparent;border-right-color:#52CC33} */
+  .m-message .right .avatar {
+    margin-left: 10px;
+  }
+  .m-message .right .text {
+    background-color:#52CC33;
+  }
+  </style>
+  </head>
 <body>
   <div id="chat">
     <div class="sidebar">
@@ -89,7 +135,7 @@
         </ul>
       </div>
       <div class="m-text">
-        <textarea id="myContent" placeholder="按 Ctrl + Enter 发送"></textarea>
+        <textarea onkeydown="downCode(event)" id="myContent" placeholder="按 Ctrl + Enter 发送"></textarea>
       </div>
       <span class='send'>发送</span>
     </div>
@@ -129,6 +175,7 @@
             socket.emit("message-private", currentPeople.account , message) // 给某人发送消息
             $("#myContent").val("")
             updateChat()
+            $("#main")[0].scrollTop = $("#main")[0].scrollHeight
           }
         })
         $(document).on('click','#users li', function(){
@@ -203,6 +250,12 @@
              $('#users').html(userList.join(""))
             
          } 
+         var downCode = function(event){
+            if(event.keyCode === 13) {
+              // 尝试发送
+              $('.send').trigger('click')
+            }
+         }
     </script>
 </body>
 </html>

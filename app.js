@@ -8,13 +8,20 @@ var bodyParser  =  require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));  // 中间件 
 
 app.use(require('express').static('./public'))
+
+
  // 设置官方文档提供的中间件
 app.use(session({
   　　secret: 'keyboard cat',
   　　esave: true,
   　　saveUninitialized: true
 }))
-
+app.get('/', function(req, res){
+  if(req.session.user)
+    res.redirect('/chats.html')
+  else 
+    res.redirect('/login.html')
+})
 app.post('/login', function (req, res) {
    if(req.body.account && req.body.pwd) {
     // 校验用户名密码是否为空
@@ -57,7 +64,17 @@ io.on('connection', function(socket){
   });
 
   socket.on('message-private', function(account,msg){
-    var toID = getSocketIDByAccount(account)
+    var toID = getSocketIDByAccount(account) // a 给 b发消息  这条记录要记在a的消息里 也要记在b的消息里
+    var formPeople =  getUserByAccount(msg.account) // 谁发的消息
+    var toPeople =  getUserByAccount(account) // 发给谁的消息
+    if(formPeople) {
+      formPeople.messages = formPeople.messages || []
+      formPeople.messages.push(msg)
+    }
+    if(toPeople) {
+      toPeople.messages = toPeople.messages || []
+      toPeople.messages.push(msg)
+    }
     socket.broadcast.to(toID).emit("message-private",account, msg) // 给某人指定发消息
   });
 });
