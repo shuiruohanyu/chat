@@ -59,13 +59,13 @@
 <style type="text/css">
 #chat{overflow:hidden;border-radius:3px}
 #chat .main,#chat .sidebar{height:100%}
-#chat .sidebar
-{
-  float:left;width:200px;color:#f4f4f4;background-color:#2e3238}
-  #chat .main{position:relative;overflow-y:auto;background-color:#eee}
+#chat .sidebar{float:left;width:200px;color:#f4f4f4;background-color:#2e3238}
+  #chat .main{position:relative;overflow:hidden;background-color:#eee}
   #chat .m-text{position:absolute;width:100%;bottom:0;left:0}
-  #chat .m-message{height:calc(100% - 10pc)
-  }
+  #chat .m-message{height:calc(100% - 10pc);}
+ #main {
+   overflow-y: auto !important;
+ }
   </style>
   <style type="text/css">
   .m-card{padding:9pt;border-bottom:1px solid #24272c}
@@ -107,6 +107,7 @@
   </head>
 <body>
   <div id="chat">
+    <audio id="msgVoice" src="./audio/msg.wav" style='display: none'></audio>
     <div class="sidebar">
       <div class="m-card">
         <header>
@@ -179,8 +180,10 @@
           }
         })
         $(document).on('click','#users li', function(){
-             currentPeople = peoples.find(item => item.account == $(this)[0].dataset.account) 
-             updateChat()  
+            var p = peoples.find(item => item.account == $(this)[0].dataset.account) 
+            if(p &&  p.account !== currentPeople.account)  {
+              updateChat()  
+            }
         })
         // 连接socket
         var connectSocket = function () {
@@ -214,6 +217,8 @@
            p.messages = p.messages || []
            p.messages.push(message) // 将信息添加到信息池里面
            updateChat()
+           playVoice() 
+           $("#main")[0].scrollTop = $("#main")[0].scrollHeight
 
           })
           //  更新聊天区
@@ -255,6 +260,11 @@
               // 尝试发送
               $('.send').trigger('click')
             }
+         }
+        //  播放声音
+         var playVoice = function () {
+            var dom = document.getElementById("msgVoice")
+            dom.play()
          }
     </script>
 </body>
